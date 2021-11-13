@@ -78,11 +78,12 @@ class LoudnessExtractor(nn.Module):
         sliced_signal = paded_input_signal.unfold(1, self.n_fft, self.frame_length)
         sliced_windowed_signal = sliced_signal * self.smoothing_window
         
-        SLICED_SIGNAL = torch.rfft(sliced_windowed_signal, 1, onesided = False)
+        SLICED_SIGNAL = torch.fft.fft(sliced_windowed_signal, dim=1)
+        SLICED_SIGNAL = torch.view_as_real(SLICED_SIGNAL)
+        # SLICED_SIGNAL = torch.rfft(sliced_windowed_signal, 1, onesided = False)
         
-        SLICED_SIGNAL_LOUDNESS_SPECTRUM = torch.zeros(SLICED_SIGNAL.shape[:-1])
+        # SLICED_SIGNAL_LOUDNESS_SPECTRUM = torch.zeros(SLICED_SIGNAL.shape[:-1])
         SLICED_SIGNAL_LOUDNESS_SPECTRUM = SLICED_SIGNAL[:, :, :, 0] ** 2 + SLICED_SIGNAL[:, :, :, 1] ** 2
-                
         freq_bin_size = self.sr / self.n_fft
         FREQUENCIES = torch.tensor([(freq_bin_size * i) % (0.5 * self.sr) for i in range(self.n_fft)]).to(self.device)
         A_WEIGHTS = self.torch_A_weighting(FREQUENCIES)
