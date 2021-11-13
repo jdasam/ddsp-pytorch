@@ -116,8 +116,8 @@ def setup(
 
     if args is not None:
         conf = OmegaConf.create(args.__dict__)
-        conf.save(logpath[:-4] + ".yaml")
-        conf.save(args.ckpt + ".yaml")
+        OmegaConf.save(conf, logpath[:-4] + ".yaml")
+        OmegaConf.save(conf, args.ckpt + ".yaml")
 
     if autolog:
         fp = open(logpath, "w")

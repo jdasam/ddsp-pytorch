@@ -14,6 +14,7 @@ import os
 import json
 import logging
 import pandas as pd
+from omegaconf import OmegaConf
 
 from .PinkModule.logging import *
 
@@ -151,7 +152,7 @@ class Trainer:
             torch.save(self.lr_scheduler.state_dict(), f + ".scheduler")
 
         with open(f + ".config", "w") as fp:
-            json.dump(self.config, fp)
+            json.dump(OmegaConf.to_yaml(self.config), fp)
 
         self.dataframe.to_csv(f + ".csv", float_format="%.6f", index=False)
 
