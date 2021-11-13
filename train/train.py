@@ -70,8 +70,7 @@ config = setup(default_config="../configs/violin.yaml")
 #     crepe="full",
 #     bidirectional=False,
 #     ))
-
-print(OmegaConf.create(config.__dict__).pretty())
+print(OmegaConf.to_yaml(config.__dict__))
 set_seeds(config.seed)
 Trainer.set_experiment_name(config.experiment_name)
 
